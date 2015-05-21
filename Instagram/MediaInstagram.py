@@ -1,5 +1,4 @@
 # coding=utf-8
-__author__ = 'Mk&BKc'
 from instagram import InstagramAPIError, InstagramAPI
 from httplib2 import ServerNotFoundError
 from Peticiones.Peticiones import Peticiones

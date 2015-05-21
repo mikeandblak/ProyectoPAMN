@@ -1,5 +1,4 @@
 # coding=utf-8
-__author__ = 'Mk&Bk'
 import os
 import shutil
 import sys

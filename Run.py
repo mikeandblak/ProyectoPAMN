@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # coding=utf-8
-__author__ = 'Mk&Bk'
 from Peticiones.Peticiones import Peticiones
 from Instagram.MediaInstagram import BusquedaMedia
 from Twitter.MediaTwitter import MediaTwitter
