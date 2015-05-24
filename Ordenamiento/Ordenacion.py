@@ -1,7 +1,7 @@
 from operator import itemgetter
 
 
-class OrdenadorImagenes():
+class OrdenadorImagenes:
     def __init__(self, lista):
         self.lista = lista
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
+
 from Peticiones.Peticiones import Peticiones
 from Instagram.MediaInstagram import BusquedaMedia
 from Twitter.MediaTwitter import MediaTwitter
@@ -8,25 +9,26 @@ from Ordenamiento.Ordenacion import OrdenadorImagenes
 from termcolor import *
 
 
+# Clase Run, combinación de los componenetes y generar el programa
 class Run:
     def __init__(self):
-        print('Cargando...')
-        self.lista_imagenes = []
-        self.token_instagram = '1750630587.ee26789.814d1f9eef7b47acb90a958dedcb7af7'
+        print('Cargando...')  # Mensaje mientras instacia API Instagram y Twitter
+        self.lista_imagenes = []  # Lista que guarda cada una de las imágenes
+        self.token_instagram = '1750630587.ee26789.814d1f9eef7b47acb90a958dedcb7af7'  # Access Token de Instagram
         self.datos_twitter = {
             'c_key': 'zAS0Nqxy38IybYdvtd5p4UcOB',
             'c_secret': 'JPh1abxusINcSfRlfS0VF1bgPU45iQkYrWlyZh7yFa1JlS9gpx',
             'token': '135695196-oLyFTOofiBnlAc3eO9l3asDbd8aKeCAx8KZHQINb',
             'token_secret': 'gJw2oZmcPQK7tRfItvTntItoQnu8AVTjnF269dEoug2JT'
-            }
-        self.search_t = MediaTwitter(self.datos_twitter)
-        self.search_i = BusquedaMedia(self.token_instagram)
+            }  # Diccionario con los datos de Twitter
+        self.search_t = MediaTwitter(self.datos_twitter)  # Instancia de Api Twitter
+        self.search_i = BusquedaMedia(self.token_instagram)  # Instancia de Api Instagram
 
     def menu_busqueda(self):
-        Peticiones.limpiar_pantalla()
-        cprint('\t\t\tGenerador de Galería ordenada', 'yellow', attrs=['bold'])
-        self.__menu_tipo_busqueda__()
-        modo_busqueda = Peticiones.pedir_numero('Elige una opcion: ', [1, 3])
+        Peticiones.limpiar_pantalla()  # "Limpia" la consola
+        cprint('\t\t\tGenerador de Galería ordenada', 'yellow', attrs=['bold'])  # Título
+        self.__menu_tipo_busqueda__()  # Muestra el menú
+        modo_busqueda = Peticiones.pedir_numero('Elige una opcion: ', [1, 3])  # Pide y guarda la opción elegida
         if modo_busqueda is 1:
             self.__busqueda_tag__()
         elif modo_busqueda is 2:
