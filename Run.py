@@ -28,7 +28,7 @@ class Run:
         Peticiones.limpiar_pantalla()  # "Limpia" la consola
         cprint('\t\t\tGenerador de Galería ordenada', 'yellow', attrs=['bold'])  # Título
         self.__menu_tipo_busqueda__()  # Muestra el menú
-        modo_busqueda = Peticiones.pedir_numero('Elige una opcion: ', [1, 3])  # Pide y guarda la opción elegida
+        modo_busqueda = Peticiones.pedir_numero('Elige una opcion: ', 1, 3)  # Pide y guarda la opción elegida
         if modo_busqueda is 1:
             self.__busqueda_tag__()  # Si eligió opción 1 buscar por tag
         elif modo_busqueda is 2:
@@ -98,7 +98,7 @@ class Run:
         Peticiones.limpiar_pantalla()  # "Limpia" el shell
         print('\t1. Ascendente')
         print('\t2. Descendente')
-        return Peticiones.pedir_numero('Elige tipo de orden: ', [1, 2])  # Devuelve la opción elegida
+        return Peticiones.pedir_numero('Elige tipo de orden: ', 1, 2)  # Devuelve la opción elegida
 
     @staticmethod
     def __menu_ordenamiento__():
@@ -106,7 +106,7 @@ class Run:
         cprint('\t\tOrdenar Por: ', 'yellow', attrs=['bold'])  # Muestra el mensaje con color y bold
         print('\t1. Fecha')
         print('\t2. Nombre de usuario')
-        return Peticiones.pedir_numero('Elige una opcion: ', [1, 2])  # Devuelve la opción elegida
+        return Peticiones.pedir_numero('Elige una opcion: ', 1, 2)  # Devuelve la opción elegida
 
     @staticmethod
     def __menu_tipo_busqueda__():
