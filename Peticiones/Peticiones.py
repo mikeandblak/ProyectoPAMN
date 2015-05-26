@@ -4,7 +4,8 @@ import shutil
 import sys
 
 
-class Peticiones():
+class Peticiones:
+
     def __init__(self):
         pass
 
@@ -22,17 +23,6 @@ class Peticiones():
                 print('Valor no válido, introduce uno correcto.')
             except Exception, e:
                 print 'Error peticiones la clase es: ' + str(e.__class__)
-
-    @classmethod
-    def numero_en_rango(cls, numero, rango):
-        try:
-            if numero < rango[0] or numero > rango[1]:
-                return False
-            else:
-                return True
-        except Exception, e:
-            print('Error numero en rango: '.format(e.message))
-            return False
 
     @classmethod
     def es_numero(cls, numero):
