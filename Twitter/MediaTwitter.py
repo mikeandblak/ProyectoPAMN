@@ -6,15 +6,17 @@ from Peticiones.Peticiones import Peticiones
 class MediaTwitter:
 
     def __init__(self, datos_app):
+        # Guarda los datos necesarios para el API
         self.consumer_key = datos_app['c_key']
         self.consumer_secret = datos_app['c_secret']
         self.access_token = datos_app['token']
         self.access_token_secret = datos_app['token_secret']
-        self.__iniciar_conexion__()
-        self.sin_media = 0
+        self.__iniciar_conexion__()  # Realiza la instancia del API
+        self.sin_media = 0  # Contador para los tweets sin imagen
 
     def __iniciar_conexion__(self):
         try:
+            # Crea la instancia del API TwitterSearch
             self.apiTS = TwitterSearch(
                 consumer_key=self.consumer_key,
                 consumer_secret=self.consumer_secret,
@@ -22,105 +24,87 @@ class MediaTwitter:
                 access_token_secret=self.access_token_secret)
         except Exception, e:
             print('Error Twitter : ' + str(e))
-            Peticiones.log_twitter(str(e))
+            Peticiones.log_twitter(str(e))  # Guarda error en el log
 
     def buscar_por_tags(self, tag):
         try:
-            tags = [tag]
-            tso = TwitterSearchOrder()
-            tso.set_keywords(tags)
-            tso.set_include_entities(True)
-            tweets = self.apiTS.search_tweets_iterable(tso)
-            lista = self.generar_lista_tweets(tweets=tweets)
+            tags = [tag]  # Guarda tag en una lista
+            tso = TwitterSearchOrder()  # Crea objeto para realizar la búsqueda
+            tso.set_keywords(tags)  # Guarda palabras que buscará
+            tso.set_include_entities(True)  # True para tweet con toda su información
+            tweets = self.apiTS.search_tweets_iterable(tso)  # Realiza la búsqueda
+            lista = self.generar_lista_tweets(tweets=tweets)  # Genera la lista con los tweets que tienen imagen
             if len(lista) is not 0:
-                return lista
-            print('No hay imagenes en Twitter con ese Hashtag :(')
+                return lista # Devuelve la lista si no esta vacía
+            print('No hay imagenes en Twitter con ese Hashtag :(')  # Si está vacía muestra mensaje
         except TwitterSearchException as e:
             print('Error Twitter: ' + str(e))
-            Peticiones.log_twitter(str(e))
+            Peticiones.log_twitter(str(e))  # Guarda mensaje en el log
 
     def buscar_por_cordenadas(self, latitud, longitud):
         try:
-            tso = TwitterSearchOrder()
-            tso.set_keywords(['a'])
-            tso.set_include_entities(True)
-            tso.set_geocode(latitud, longitud, 50000, imperial_metric=False)
-            tso.set_result_type('popular')
-            tweets = self.apiTS.search_tweets_iterable(tso)
-            lista = self.generar_lista_tweets(tweets)
+            tso = TwitterSearchOrder()  # Crea objeto de búsqueda
+            tso.set_keywords(['a'])  # Palabras con las que buscará
+            tso.set_include_entities(True)  # Tweet con todos los datos Verdadero
+            tso.set_geocode(latitud, longitud, 5000, imperial_metric=False)  # Coordenadas y radio de busqueda en Km
+            tso.set_result_type('mixed')  # Tipo de búsqueda mezcla de todo
+            tweets = self.apiTS.search_tweets_iterable(tso)  # Realiza la búsqueda y guarda los tweets
+            lista = self.generar_lista_tweets(tweets)  # Genera la lista con los datos de los tweets
             if len(lista) is not 0:
-                return lista
-            print('No hay imagenes en Twitter con esas coordenadas :(')
+                return lista  # Si la lista no esta vacía la devuelve
+            print('No hay imagenes en Twitter con esas coordenadas :(')  # Si no hubo tweets muestra mensaje
         except TwitterSearchException as e:
             print('Error Busqueda por Coordenadas twitter: ' + str(e))
         except Exception, e:
             print('Error al realizar la busqueda Twitter: ' + str(e))
-            Peticiones.log_twitter(str(e))
+            Peticiones.log_twitter(str(e))  # Guarda el error en el Log
 
     def buscar_popular(self):
         try:
-            tso = TwitterSearchOrder()
-            tso.set_keywords(['mexico'])
-            tso.set_include_entities(True)
-            tso.set_result_type('popular')
-            tweets = self.apiTS.search_tweets_iterable(tso)
-            lista = self.generar_lista_tweets(tweets=tweets)
+            tso = TwitterSearchOrder()  # Crea objeto de búsqueda
+            tso.set_keywords(['mexico']) # Palabra que buscará
+            tso.set_include_entities(True)  # Tweet con toda la información disponible Verdadero
+            tso.set_result_type('popular')  # Tipo de búsqueda tweets populares
+            tweets = self.apiTS.search_tweets_iterable(tso)  # Realiza la busqueda
+            lista = self.generar_lista_tweets(tweets=tweets)  #
             if len(lista) is 0:
                 print('No hay imagenes en Twitter (Popular) :(')
-                return None
-            return lista
+                return None  # Si la lista esta vacía devuelve None
+            return lista  # Si hubo tweets devuelve la lista con los datos
         except TwitterSearchException as e:
             print('Error twitter : ' + str(e))
             Peticiones.log_twitter(str(e))
 
     def generar_lista_tweets(self, tweets):
         lista = []
-        count = 0
+        count = 0  # Para detener la búsqueda
         for tweet in tweets:
-            datos = self.extraer_datos_tupla(tweet)
+            datos = self.extraer_datos_tupla(tweet)  # Extrae los datos
             if datos is not None:
-                lista.append(datos)
+                lista.append(datos)  # Si hubo datos los agrega a la lista
             if count == 2000:
-                break
+                break  # Busca sólo en 2000 tweets
             count += 1
-        return lista
-
-    @staticmethod
-    def extraer_datos_diccionario(tweet):
-        dic_datos = {}
-        try:
-            lista = tweet['entities']['media']
-            dic = lista[0]
-            datos_usuarios = tweet['user']
-            dic_datos['url'] = str(dic['media_url']).encode('utf-8')
-            dic_datos['tags'] = str(tweet['entities']['hashtags'])
-            dic_datos['usuario'] = str(datos_usuarios['name']).encode('utf-8')
-            dic_datos['fecha'] = str(tweet['created_at']).encode('utf-8')
-            dic_datos['descripcion'] = str(tweet['text']).encode('utf-8')
-            return dic_datos
-        except Exception, e:
-            print('Error extraer datos diccionario: ' + str(e))
-            Peticiones.log_twitter(str(e))
-            return None
+        return lista  # Devuelve la lista con los datos
 
     def extraer_datos_tupla(self, tweet):
         try:
-            lista = tweet['entities']['media']
-            dic = lista[0]
-            fecha = self.obtener_fecha(tweet['created_at'])
-            hora = self.obtener_hora(tweet['created_at'])
+            lista = tweet['entities']['media']  # Extrae una lista de dos diccionarios si contiene imagen el tweet
+            dic = lista[0]  # Obtenemos el primer diccionario, que trae la información que necesitamos
+            fecha = self.obtener_fecha(tweet['created_at'])  # Obtiene la fecha
+            hora = self.obtener_hora(tweet['created_at']) # Obtiene la hora
             tupla_datos = (
-                str(dic['media_url'].encode('utf-8')),
-                tweet['user']['name'].encode('utf-8').title(),
-                str(tweet['text'].encode('utf-8')),
-                str(tweet['user']['description'].encode('utf-8')),
-                fecha[0],
-                fecha[1],
-                fecha[2],
-                hora[0],
-                hora[1],
-                hora[2],
-                str(tweet['entities']['media'][0]['display_url'])
+                str(dic['media_url'].encode('utf-8')),  # Obtiene la url de la imagen
+                tweet['user']['name'].encode('utf-8').title(),  # Obtiene el nombre de usuario
+                str(tweet['text'].encode('utf-8')),  # Obtiene el texto del tweet
+                str(tweet['user']['description'].encode('utf-8')),  # Obtiene la descripción del usuario
+                fecha[0],  # Día
+                fecha[1],  # Mes
+                fecha[2],  # Año
+                hora[0],  # Hora
+                hora[1],  # Minuto
+                hora[2],  # Segundo
+                str(tweet['entities']['media'][0]['display_url'])  # Obtiene el url a la pagina del tweet en twitter
             )
             return tupla_datos
         except Exception, e:
