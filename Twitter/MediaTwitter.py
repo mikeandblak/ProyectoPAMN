@@ -109,11 +109,12 @@ class MediaTwitter:
             return tupla_datos
         except Exception, e:
             self.sin_media += 1
-            Peticiones.log_twitter(str(e.__class__))
+            Peticiones.log_twitter(str(e))  # Guarda error el el Log
             return None
 
     @staticmethod
     def cambio_mes(mes):
+        # Cambia el dato del mes de palabra a número
         if mes == 'Jan':
             return 1
         elif mes == 'Feb':
@@ -140,6 +141,7 @@ class MediaTwitter:
             return 12
 
     def obtener_fecha(self, fecha):
+        # Obtiene la fecha del tweet y divide sus partes en una tupla
         lista = fecha.split(' ')
         fecha = (
             int(lista[2]),
@@ -150,6 +152,7 @@ class MediaTwitter:
 
     @staticmethod
     def obtener_hora(fecha):
+        # Obtiene la hora y divide sus partes en una tupla
         lista = fecha.split(' ')
         h = lista[3].split(':')
         hora = (int(h[0]), int(h[1]), int(h[2]))
